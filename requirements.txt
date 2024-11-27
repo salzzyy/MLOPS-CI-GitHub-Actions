@@ -2,3 +2,4 @@ streamlit==1.40.2
 matplotlib
 pandas
 seaborn
+pytest
