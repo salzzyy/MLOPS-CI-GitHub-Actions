@@ -7,56 +7,31 @@ on:
   pull_request:
     branches:
       - main
-  workflow_dispatch:  # Allows manual trigger of the workflow from the Actions tab
-
+  workflow_dispatch:
 
 jobs:
   setup:
-    runs-on: ubuntu-latest  # You can change this to 'windows-latest' or 'macos-latest' if needed
+    runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Check out the repository
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      # Step 2: Set up Python environment
       - name: Set up Python 3.8
         uses: actions/setup-python@v4
         with:
           python-version: '3.8'
 
-      # Step 3: Cache pip dependencies to speed up future builds
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-python-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-python-
+      - name: Clear pip cache
+        run: |
+          rm -rf ~/.cache/pip
 
-      # Step 4: Install dependencies
-      
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install streamlit==1.39.0
-          pip install -r requirements.txt
+          pip install --no-cache-dir -r requirements.txt
 
-      # Step 5: Run tests
       - name: Run tests
         run: |
-          pytest test.py  # Make sure to use your actual test file name here
-          # Example: pytest tests/
+          pytest test.py
 
-      # Step 6: Build Streamlit app (optional, if you want to build it before deploying)
-      # - name: Build Streamlit app
-      #   run: |
-      #     # Example: Build-related commands, like bundling assets, etc.
-      #     echo "Building Streamlit app"
-
-      # Step 7: Deploy Streamlit app (optional, depending on your deployment platform)
-      # If you're deploying to a platform like Streamlit Cloud, you might not need this step.
-      # - name: Deploy Streamlit app (optional)
-      #   run: |
-      #     # Example: Deploy to your server or platform (e.g., Streamlit Cloud, AWS, Heroku)
-      #     echo "Deploying Streamlit app"
