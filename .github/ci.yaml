@@ -1,0 +1,51 @@
+name: Streamlit CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest  # You can use 'windows-latest' or 'macos-latest' based on your requirements
+
+    steps:
+      # Step 1: Check out the repository
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      
+      # Step 2: Set up Python environment
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'
+      
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Step 4: Run tests (optional, if you have tests)
+      - name: Run tests
+        run: |
+          pytest _test.py
+          # Example: Run pytest if you have tests
+          # pytest tests/
+          echo "Running tests"  # Replace this with your testing command
+
+      # Step 5: Build Streamlit app (optional, if you want to build it before deploying)
+      - name: Build Streamlit app (optional)
+        run: |
+          # You can add any build-related commands here if needed
+          echo "Building Streamlit app"
+
+      # Step 6: Deploy Streamlit app (optional step, depending on your deployment platform)
+      # - name: Deploy Streamlit app (optional)
+      #   run: |
+      #     # Example: Deploy to your server or platform (e.g., Streamlit Cloud, AWS, Heroku)
+      #     echo "Deploying Streamlit app"
+
